@@ -1,1 +1,4 @@
 .env
+/coverage
+/build
+.DS_Store

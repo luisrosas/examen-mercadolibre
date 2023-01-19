@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/luisrosas/examen-mercadolibre/internal/dna/application"
+	"github.com/luisrosas/examen-mercadolibre/internal/dna/domain"
 )
 
 type statsResponse struct {
@@ -13,9 +13,13 @@ type statsResponse struct {
 	Ratio          float32 `json:"ratio"`
 }
 
-func Handle(dnaStatisticsUserCase application.DnaStatisticsUserCase) func(w http.ResponseWriter, r *http.Request) {
+type dnaStatisticsUserCase interface {
+	Handle() (domain.DnaStatistics, error)
+}
+
+func Handle(useCase dnaStatisticsUserCase) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		stats, err := dnaStatisticsUserCase.Handle()
+		stats, err := useCase.Handle()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 

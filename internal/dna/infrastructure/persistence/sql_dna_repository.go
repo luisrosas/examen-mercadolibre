@@ -75,8 +75,8 @@ func (r *SQLDnaRepository) Find(dnaChain []string) (domain.Dna, error) {
 
 func (r *SQLDnaRepository) GetStatistics() (domain.DnaStatistics, error) {
 	query := `SELECT
-				(SELECT COUNT(*) FROM dnas WHERE is_mutant = true) as mutants,
-				(SELECT COUNT(*) FROM dnas WHERE is_mutant = false) as humans`
+				(SELECT COUNT(id) FROM dnas WHERE is_mutant = true) as mutants,
+				(SELECT COUNT(id) FROM dnas WHERE is_mutant = false) as humans`
 
 	var mutants, humans uint
 	row := r.db.QueryRow(query)

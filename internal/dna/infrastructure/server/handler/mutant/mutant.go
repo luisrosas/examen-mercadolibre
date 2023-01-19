@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/luisrosas/examen-mercadolibre/internal/dna/application"
+	"github.com/luisrosas/examen-mercadolibre/internal/dna/domain"
 )
 
 var (
@@ -19,7 +20,11 @@ type dnaRequest struct {
 	Dna []string `json:"dna"`
 }
 
-func Handle(service application.DnaUseCase) func(w http.ResponseWriter, r *http.Request) {
+type dnaUseCase interface {
+	Handle(dnaChain []string) (domain.Dna, error)
+}
+
+func Handle(useCase dnaUseCase) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		b, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
@@ -30,8 +35,8 @@ func Handle(service application.DnaUseCase) func(w http.ResponseWriter, r *http.
 			return
 		}
 
-		var dna dnaRequest
-		err = json.Unmarshal(b, &dna)
+		var dnaRequest dnaRequest
+		err = json.Unmarshal(b, &dnaRequest)
 		if err != nil {
 			log.Printf("Json unmarshal: %v", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -39,7 +44,7 @@ func Handle(service application.DnaUseCase) func(w http.ResponseWriter, r *http.
 			return
 		}
 
-		responseDna, err := service.Handle(dna.Dna)
+		responseDna, err := useCase.Handle(dnaRequest.Dna)
 		if err != nil {
 			log.Println(err)
 			switch {

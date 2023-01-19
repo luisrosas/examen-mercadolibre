@@ -12,6 +12,6 @@ func NewDnaStatsUserCase(repo domain.DnaRepository) *DnaStatisticsUserCase {
 	}
 }
 
-func (d *DnaStatisticsUserCase) Handle() (domain.DnaStatistics, error) {
+func (d DnaStatisticsUserCase) Handle() (domain.DnaStatistics, error) {
 	return d.dnaRepository.GetStatistics()
 }
