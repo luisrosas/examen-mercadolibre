@@ -1,6 +1,9 @@
-.PHONY: build test coverage
+.PHONY: install build test coverage
 
 PACKAGES := $(shell go list ./... )
+
+install:
+	@go mod tidy
 
 build:
 	@go build -o ./build/ cmd/api/main.go
