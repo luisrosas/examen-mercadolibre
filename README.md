@@ -2,7 +2,7 @@
 
 Desarrollo de un API para detectar si un ADN es mutante o no
 
-### Stack tecnologíco
+### Stack tecnológico
 * Go (v1.17 o superior)
 * Mysql
 
