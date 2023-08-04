@@ -18,6 +18,11 @@ WORKDIR /api-mutant/cmd/api
 
 RUN go build -ldflags="-s -w" -o /main main.go
 
+# Add docker-compose-wait tool -------------------
+ENV WAIT_VERSION 2.7.2
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
+RUN chmod +x /wait
+
 ### Build Final Image ###
 
 FROM scratch
@@ -25,9 +30,6 @@ FROM scratch
 COPY --from=go-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=go-builder /main /api-mutant
 
-# Add docker-compose-wait tool -------------------
-ENV WAIT_VERSION 2.7.2
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
-RUN chmod +x /wait
+COPY --from=go-builder /wait /wait
 
 CMD ["/api-mutant"]
