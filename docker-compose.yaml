@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   server_go:
-    build: .
+    build: ./dockerfiles
     image: api-mutant-server-go
     container_name: api_mutant
     restart: on-failure
